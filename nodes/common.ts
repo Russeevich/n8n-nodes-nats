@@ -4,8 +4,6 @@ import { Authenticator, ConnectionOptions, connect, credsAuthenticator, jwtAuthe
 export function natsConnectionOptions(credentials: ICredentialDataDecryptedObject): ConnectionOptions {
 	let { authType, user, pass, token, seed, jwtSeed, jwt, creds, tlsCa, tlsCert, tlsKey, ...options } = credentials
 
-	options.tls = { ca: tlsCa }
-
 	const authenticators: Authenticator[] = []
 
 	//legacy compatibility
@@ -46,6 +44,7 @@ export function natsConnectionOptions(credentials: ICredentialDataDecryptedObjec
 			authenticators.push(credsAuthenticator(new TextEncoder().encode(creds as string)))
 		  break
 		case 'tls':
+			options.tls = { ca: tlsCa }
 			options.tls.cert = { ...options.tls, cert: tlsCert, key: tlsKey }
 		  break
 	}
